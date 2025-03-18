@@ -4,7 +4,7 @@ import logging
 import asyncio
 
 # BOT TOKEN — siz bergan token to'g'ridan-to'g'ri yozildi
-API_TOKEN = "8074896764:AAHRt9UP9zg-s7fiJVJR6TPgbPnXYYc8EgQ"
+API_TOKEN = "8074896764:AAEvBNUgvcLTu_pf9mdb_GdH7FEc0frZl0M"
 
 # Logging
 logging.basicConfig(level=logging.INFO)

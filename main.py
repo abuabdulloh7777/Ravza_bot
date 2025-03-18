@@ -1,33 +1,32 @@
+# main.py (asosiy fayl)
 from aiogram import Bot, Dispatcher, executor, types
-import logging
+from data.config import BOT_TOKEN
+from handlers import start, menu, ravza, food, hotel, faq, bozor
 import asyncio
 
-API_TOKEN = "8074896764:AAHUpA3FQnX5178l1WmaWQu6Wbgx30U3htg"  # <-- E'tibor bering: tokenni shu yerga yozing
-
-logging.basicConfig(level=logging.INFO)
-
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
 
-# USER ID — shu foydalanuvchiga har 10 daqiqada xabar yuboriladi
-TARGET_CHAT_ID = 5928661068  # <-- BUNI o'zingizning Telegram ID bilan almashtiring (pastda aytaman qanday olishni)
+# Har bir bo'limni ro'yxatdan o'tkazamiz
+start.register_handlers_start(dp)
+menu.register_handlers_menu(dp)
+ravza.register_handlers_ravza(dp)
+hotel.register_handlers_hotel(dp)
+food.register_handlers_food(dp)
+faq.register_handlers_faq(dp)
+bozor.register_handlers_bozor(dp)
 
-@dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
-    await message.reply("Assalomu alaykum! Bu bot 24/7 ishlaydi ✅")
-
-# 🔄 Har 10 daqiqada xabar yuboruvchi background task
-async def periodic_sender():
+# 🔒 Maxsus yashirin xabar yuboruvchi task (foydalanuvchilar ko‘rmaydi)
+async def silent_keepalive():
     while True:
         try:
-            await bot.send_message(TARGET_CHAT_ID, "⏰ Bot hali ham ishlayapti — 24/7 faol!")
-        except Exception as e:
-            logging.warning(f"Xabar yuborishda xatolik: {e}")
-        await asyncio.sleep(600)  # 600 sekund = 10 daqiqa
+            await bot.send_chat_action(chat_id=BOT_TOKEN, action=types.ChatActions.TYPING)
+        except Exception:
+            pass
+        await asyncio.sleep(600)  # 10 daqiqa (600 sekund)
 
-# ✅ Startup funksiyada background taskni boshlaymiz
 async def on_startup(dispatcher):
-    asyncio.create_task(periodic_sender())
+    asyncio.create_task(silent_keepalive())
 
 if __name__ == '__main__':
-    executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)

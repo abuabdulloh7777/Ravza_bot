@@ -5,7 +5,7 @@ import logging
 import asyncio
 import os
 
-API_TOKEN = os.getenv("BOT_TOKEN", "your_token_here")
+API_TOKEN = os.getenv("8074896764:AAHRt9UP9zg-s7fiJVJR6TPgbPnXYYc8EgQ", "your_token_here")
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
